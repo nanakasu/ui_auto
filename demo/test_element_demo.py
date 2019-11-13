@@ -1,7 +1,9 @@
 from time import sleep
 
+import autoit
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common import actions
+from selenium.webdriver.common.keys import Keys
 
 
 def test_input(driver):
@@ -70,3 +72,43 @@ def test_upload(driver):
     file.send_keys("C:\\Users\\guoya\\Desktop\\_20191113144411.jpg")
     sleep(2)
 
+def test_upload2(driver):
+    driver.get("http://ui.yansl.com/#/upload")
+    sleep(2)
+
+    file = driver.find_element_by_xpath("//*[@id='form']/form/div[2]/div/div/div[1]/button/span")
+    file.click()
+    sleep(2)
+    autoit.win_wait("打开", 10)
+    sleep(1)
+    # autoit.control_send("打开", "Edit1", os.path.abspath(file_path))
+    autoit.control_set_text("打开", "Edit1", "C:\\Users\\guoya\\Desktop\\_20191113144411.jpg")
+    sleep(2)
+    autoit.control_click("打开", "Button1")
+
+
+def test_windows(driver):
+    driver.get("http://192.168.1.128:8082/xuepl/demo.html")
+    sleep(2)
+
+    dang_dang = driver.find_element_by_link_text("当当")
+    actions = ActionChains(driver)
+    actions.key_down(Keys.CONTROL).click(dang_dang).key_up(Keys.CONTROL).perform()
+    sleep(2)
+    jd = driver.find_element_by_link_text("京东")
+    actions = ActionChains(driver)
+    actions.key_down(Keys.CONTROL).click(jd).key_up(Keys.CONTROL).perform()
+    sleep(2)
+    dn = driver.find_element_by_partial_link_text("度娘")
+    actions = ActionChains(driver)
+    actions.key_down(Keys.CONTROL).click(dn).key_up(Keys.CONTROL).perform()
+    sleep(2)
+
+    # 获取所有窗口的句柄
+    handles = driver.window_handles
+    for h in handles:
+        # 根据窗口句柄，切换窗口
+        driver.switch_to.window(h)
+        sleep(2)
+        if driver.title.__contains__("京东"):
+            break
